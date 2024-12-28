@@ -1,5 +1,3 @@
-import { title } from "process";
-
 export const posts = {
     name:'Blog_Posts',
     type:'document',
