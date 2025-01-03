@@ -1,4 +1,5 @@
 import Blogposts from "@/components/blogposts";
+import CommentSection from "@/components/Comments";
 import BlogHeroSection from "@/components/Hero";
 
 export default function Home() {
@@ -6,7 +7,7 @@ export default function Home() {
     <main>
       <BlogHeroSection />
       <Blogposts/>
-      
+      <CommentSection/>
     </main>
   )
 }

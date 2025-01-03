@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { PortableText } from "@portabletext/react";
 import { TypedObject } from "@portabletext/types";
 import Image from "next/image";
+import CommentSection from "@/components/Comments";
 
 interface BlogPost {
   title: string;
@@ -55,6 +56,7 @@ const BlogPostPage = () => {
 
   if (isLoading) {
     return (
+      
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
       </div>
@@ -70,6 +72,7 @@ const BlogPostPage = () => {
   }
 
   return (
+    <div>
     <article className="max-w-4xl mx-auto p-5">
       <h1 className="text-4xl font-bold mb-5">{post.title}</h1>
       {post.imageUrl && (
@@ -92,6 +95,11 @@ const BlogPostPage = () => {
         </p>
       </footer>
     </article>
+    <div>
+    <CommentSection/>
+    </div>
+    </div>
+    
   );
 };
 
