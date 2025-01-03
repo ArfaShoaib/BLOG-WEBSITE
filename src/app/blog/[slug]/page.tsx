@@ -1,19 +1,16 @@
-'use client';
+"use client";
 
-import { client } from '@/sanity/lib/client';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { PortableText } from '@portabletext/react';
-import { TypedObject } from '@portabletext/types';
+import { client } from "@/sanity/lib/client";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { PortableText } from "@portabletext/react";
+import { TypedObject } from "@portabletext/types";
+import Image from "next/image";
 
 interface BlogPost {
   title: string;
-  content: TypedObject | TypedObject[]; // Updated type for Portable Text
-  image: {
-    asset: {
-      url: string;
-    };
-  };
+  content: TypedObject | TypedObject[];
+  imageUrl: string;
   author: {
     name: string;
     bio: string;
@@ -31,15 +28,11 @@ const BlogPostPage = () => {
     if (!slug) return;
 
     const fetchPost = async () => {
-      const query = `*[_type == "blogPosts" && slug.current == $slug][0]{
-        title,
+      const query = `*[_type == "Blog_Posts" && slug.current == $slug][0] {
+        "title": Post_Posts,
+        "imageUrl": image.asset->url,
         content,
-        image{
-          asset->{
-            url
-          }
-        },
-        author->{
+        "author": author->{
           name,
           bio
         },
@@ -48,10 +41,10 @@ const BlogPostPage = () => {
 
       try {
         setIsLoading(true);
-        const fetchedPost = await client.fetch(query, { slug });
+        const fetchedPost = await client.fetch<BlogPost>(query, { slug });
         setPost(fetchedPost);
       } catch (error) {
-        console.error('Failed to fetch post:', error);
+        console.error("Failed to fetch post:", error);
       } finally {
         setIsLoading(false);
       }
@@ -77,23 +70,28 @@ const BlogPostPage = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-5">
+    <article className="max-w-4xl mx-auto p-5">
       <h1 className="text-4xl font-bold mb-5">{post.title}</h1>
-      {post.image && (
-        <img
-          src={post.image.asset.url}
-          alt={post.title}
-          className="w-full h-auto mb-5"
-        />
+      {post.imageUrl && (
+        <div className="relative w-full h-[400px] mb-8">
+          <Image
+            src={post.imageUrl}
+            alt={post.title}
+            fill
+            className="object-cover rounded-lg"
+          />
+        </div>
       )}
       <div className="prose max-w-none">
         <PortableText value={post.content} />
       </div>
-      <div className="mt-5 text-sm text-gray-500">
-        <p>By {post.author.name}</p>
-        <p>{new Date(post.publishedAt).toDateString()}</p>
-      </div>
-    </div>
+      <footer className="mt-8 pt-4 border-t border-gray-200">
+        <p className="text-gray-700">By {post.author.name}</p>
+        <p className="text-gray-500 text-sm">
+          {new Date(post.publishedAt).toLocaleDateString()}
+        </p>
+      </footer>
+    </article>
   );
 };
 
