@@ -10,7 +10,7 @@ const Footer = () => {
     <ul className="flex space-x-6 gap-y-2 max-lg:justify-center flex-wrap">
       <li>
         <a href="javascript:void(0)" className="text-[15px] hover:text-white">
-          Terms of Services
+          Terms Of Services
         </a>
       </li>
       <li>
